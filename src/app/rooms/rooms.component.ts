@@ -1,6 +1,7 @@
-import { Component, ViewChild, OnInit, DoCheck, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, DoCheck, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Room, RoomList } from './rooms'
 import { HeaderComponent } from '../header/header.component';
+import { RoomsService } from './services/rooms.service';
 
 @Component({
   selector: 'app-rooms',
@@ -26,39 +27,14 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit {
 
   @ViewChild(HeaderComponent) headerComponent!: HeaderComponent;
 
+  @ViewChildren(HeaderComponent) headerChildrenComponents!: QueryList<HeaderComponent>;
+
+  constructor(private roomsService: RoomsService) {
+
+  }
+
   ngOnInit(): void {
-    this.roomList = [
-      {
-        roomNumber: 1,
-        roomType: 'Deluxe Room',
-        amenities: 'AC, TV, Wifi',
-        price: 500,
-        photos: 'https://www.google.com',
-        checkinTime: new Date('28-Jul-2023'),
-        checkoutTime: new Date('29-Jul-2023'),
-        rating: 4.5,
-      },
-      {
-        roomNumber: 2,
-        roomType: 'Deluxe Room',
-        amenities: 'AC, TV, Wifi',
-        price: 1000,
-        photos: 'https://www.google.com',
-        checkinTime: new Date('28-Jul-2023'),
-        checkoutTime: new Date('29-Jul-2023'),
-        rating: 3.4,
-      },
-      {
-        roomNumber: 3,
-        roomType: 'Private Room',
-        amenities: 'AC, TV, Wifi',
-        price: 10000,
-        photos: 'https://www.google.com',
-        checkinTime: new Date('28-Jul-2023'),
-        checkoutTime: new Date('29-Jul-2023'),
-        rating: 2.6,
-      },
-    ]
+    this.roomList = this.roomsService.getRooms();
   }
 
   ngDoCheck(): void {
@@ -67,6 +43,9 @@ export class RoomsComponent implements OnInit, DoCheck, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.headerComponent.title = 'Rooms View';
+
+    this.headerChildrenComponents.first.title = 'First View';
+    this.headerChildrenComponents.last.title = 'Last View';
   }
 
   toggle() {
